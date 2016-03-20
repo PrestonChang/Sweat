@@ -15,12 +15,14 @@ import android.widget.ListView;
 import android.view.View;
 import java.io.File;
 import org.apache.commons.io.FileUtils;
+import android.content.Intent;
 
 
 public class Workout extends ActionBarActivity {
     private ArrayList<String> exercises;
     private ArrayAdapter<String> exercisesAdapter;
     private ListView exerciseItems;
+    private String name;
 
     //Create class of exercises
     //Have arrayList of exercises
@@ -37,6 +39,12 @@ public class Workout extends ActionBarActivity {
         exerciseItems.setAdapter(exercisesAdapter);
         //Setup remove listener method call
         setupListViewListener();
+
+        Bundle exerciseData = getIntent().getExtras();
+        if (exerciseData != null) {
+            Exercise myExercise = exerciseData.getParcelable("ExerciseObject");
+            addToWorkout(myExercise);
+        }
 
     }
 
@@ -58,13 +66,19 @@ public class Workout extends ActionBarActivity {
     }
 
     public void onAddItem(View v) {
+        Intent i = new Intent(this, AddExercise.class);
+        startActivity(i);
+    }
+
+    public void addToWorkout(Exercise exercise) {
+        String exerciseText = exercise.getWeight() + " " + exercise.getSets() + " X " + exercise.getReps() + " " + exercise.getName();
+
         EditText etNewExercise = (EditText) findViewById(R.id.etNewExercise);
-        String exerciseText = etNewExercise.getText().toString();
         exercisesAdapter.add(exerciseText);
         etNewExercise.setText("");
         writeItems();
     }
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -106,4 +120,6 @@ public class Workout extends ActionBarActivity {
             e.printStackTrace();
         }
     }
+
+
 }

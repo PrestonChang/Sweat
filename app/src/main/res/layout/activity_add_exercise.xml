@@ -1,0 +1,114 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.prestonchang.sweat.AddExercise">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/exerciseField"
+        android:id="@+id/exerciseField"
+        android:layout_marginTop="26dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/exerciseTextField"
+        android:layout_alignBottom="@+id/exerciseField"
+        android:layout_toRightOf="@+id/exerciseField"
+        android:layout_marginLeft="42dp"
+        android:layout_marginStart="42dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/weightField"
+        android:id="@+id/weightField"
+        android:layout_alignBottom="@+id/weightUnitSpinner"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/weightTextField"
+        android:layout_alignBottom="@+id/weightField"
+        android:layout_alignLeft="@+id/exerciseTextField"
+        android:layout_alignStart="@+id/exerciseTextField" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/weightUnitSpinner"
+        android:layout_below="@+id/exerciseTextField"
+        android:layout_toRightOf="@+id/weightTextField"
+        android:layout_toEndOf="@+id/weightTextField"
+        android:prompt="@string/unitPrompt" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Sets"
+        android:id="@+id/setsField"
+        android:layout_above="@+id/repsTextField"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="34dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/setsTextField"
+        android:layout_alignBottom="@+id/setsField"
+        android:layout_alignLeft="@+id/weightTextField"
+        android:layout_alignStart="@+id/weightTextField"
+        android:layout_toLeftOf="@+id/weightUnitSpinner"
+        android:layout_toStartOf="@+id/weightUnitSpinner" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Repetitions"
+        android:id="@+id/repsField"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/repsTextField"
+        android:layout_alignBottom="@+id/repsField"
+        android:layout_alignLeft="@+id/setsTextField"
+        android:layout_alignStart="@+id/setsTextField"
+        android:layout_toLeftOf="@+id/weightUnitSpinner"
+        android:layout_toStartOf="@+id/weightUnitSpinner" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:id="@+id/saveExerciseButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="onAddExercise"/>
+
+</RelativeLayout>
