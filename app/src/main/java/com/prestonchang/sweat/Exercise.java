@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 public class Exercise implements Parcelable {
 
+    private int id;
     private String name;
     private double weight;
     private int sets;
@@ -21,10 +22,9 @@ public class Exercise implements Parcelable {
         this.reps = reps;
     }
 
-//    public Exercise createExercise(String name, double weight, int sets, int reps) {
-//        Exercise newExercise = new Exercise(name, weight, sets, reps);
-//        return newExercise;
-//    }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     private void setName(String exerciseName) {
         name = exerciseName;
@@ -40,6 +40,10 @@ public class Exercise implements Parcelable {
 
     private void setReps(int exerciseReps) {
         reps = exerciseReps;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {

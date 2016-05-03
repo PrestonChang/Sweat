@@ -18,11 +18,14 @@ import org.apache.commons.io.FileUtils;
 import android.content.Intent;
 
 
+
 public class Workout extends ActionBarActivity {
     private ArrayList<String> exercises;
     private ArrayAdapter<String> exercisesAdapter;
     private ListView exerciseItems;
     private String name;
+
+    DatabaseHandler databaseHandler;
 
     //Create class of exercises
     //Have arrayList of exercises
@@ -32,9 +35,11 @@ public class Workout extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
+        databaseHandler = new DatabaseHandler(this, null, null, 1);
+
         exerciseItems = (ListView) findViewById(R.id.exerciseItems);
         readItems();
-        exercisesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, exercises);
+        exercisesAdapter = new ExerciseRowAdapter(this, exercises);
 
         exerciseItems.setAdapter(exercisesAdapter);
         //Setup remove listener method call
@@ -54,7 +59,7 @@ public class Workout extends ActionBarActivity {
                 new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        //Remove the item within array at postion
+                        //Remove the item within array at position
                         exercises.remove(position);
                         //Refresh the adapter
                         exercisesAdapter.notifyDataSetChanged();
@@ -71,14 +76,14 @@ public class Workout extends ActionBarActivity {
     }
 
     public void addToWorkout(Exercise exercise) {
-        String exerciseText = exercise.getWeight() + " " + exercise.getSets() + " X " + exercise.getReps() + " " + exercise.getName();
+        //String exerciseText = exercise.getWeight() + "lbs " + exercise.getSets() + " X " + exercise.getReps() + " " + exercise.getName();
+        String exerciseText = exercise.getName();
 
-        EditText etNewExercise = (EditText) findViewById(R.id.etNewExercise);
-        exercisesAdapter.add(exerciseText);
-        etNewExercise.setText("");
+        //exercisesAdapter.add(exerciseText);
+        exercisesAdapter.add(exercise.getName());
         writeItems();
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
