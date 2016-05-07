@@ -25,12 +25,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String query = "CREATE TABLE" + TABLE_EXERCISES + "(" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT " +
-                COLUMN_EXERCISENAME + " TEXT " +
-                COLUMN_WEIGHT + " REAL " +
-                COLUMN_SETS + " INTEGER " +
-                COLUMN_REPS + " INTEGER " +
+        String query = "CREATE TABLE " + TABLE_EXERCISES + "(" +
+                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_EXERCISENAME + " TEXT, " +
+                COLUMN_WEIGHT + " REAL, " +
+                COLUMN_SETS + " INTEGER, " +
+                COLUMN_REPS + " INTEGER" +
                 ");";
         db.execSQL(query);
     }
@@ -55,42 +55,47 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    //Delete exercise from database
-    public void deleteExercise(String exerciseName) {
+    public void deleteExercise(Exercise exercise) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_EXERCISES + " WHERE " + COLUMN_EXERCISENAME + "=\"" + exerciseName + "\";");
-    }
-
-    //Print out database as a String
-    public String databaseToString() {
-        String dbString = "";
-        SQLiteDatabase db = getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_EXERCISES + " WHERE 1";
-
-        //Cursor point to a location in your results
-        Cursor c = db.rawQuery(query, null);
-        //Move to the first row in your results
-        c.moveToFirst();
-
-        while(!c.isAfterLast()) {
-            if(c.getString(c.getColumnIndex("exercisename")) != null) {
-                dbString += c.getString(c.getColumnIndex("exercisename"));
-                dbString += "\n";
-            }
-        }
+        db.delete(TABLE_EXERCISES, COLUMN_ID + " = ?",
+                new String[] { String.valueOf(exercise.getId()) });
         db.close();
-        return dbString;
     }
 
-//    public ArrayList<String> getAllValues(String table, String[] column) {
-//        ArrayList<String> list = new ArrayList<String>();
-//        SQLiteDatabase db = getReadableDatabase();
-//        Cursor cursor = db.query(table, column, null, null, null, null, null);
-//        if (cursor.moveToFirst()) {
-//            do {
-//                list.add(cursor.getString(0));
-//            } while(cursor.moveToNext());
-//        }
-//    }
+    public Exercise getExercise(int id) {
+        SQLiteDatabase db = getReadableDatabase();
 
+        Cursor cursor = db.query(TABLE_EXERCISES, new String[] { COLUMN_ID, COLUMN_EXERCISENAME, COLUMN_WEIGHT
+                , COLUMN_SETS, COLUMN_REPS}, COLUMN_ID + "=?",
+                new String[] {String.valueOf(id) }, null, null, null, null);
+        if(cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        Exercise exercise = new Exercise(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
+                Double.parseDouble(cursor.getString(2)), Integer.parseInt(cursor.getString(3)),
+                Integer.parseInt(cursor.getString(4)));
+        return exercise;
+    }
+
+    //Somethings not working here
+    public ArrayList<Exercise> getAllExercises() {
+        ArrayList<Exercise> exerciseList = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " + TABLE_EXERCISES;
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if(cursor.moveToFirst()) {
+            do {
+                Exercise exercise = new Exercise(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
+                        Double.parseDouble(cursor.getString(2)), Integer.parseInt(cursor.getString(3)),
+                        Integer.parseInt(cursor.getString(4)));
+                exerciseList.add(exercise);
+            } while(cursor.moveToNext());
+        }
+
+
+        return exerciseList;
+    }
 }

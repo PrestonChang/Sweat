@@ -3,8 +3,6 @@ package com.prestonchang.sweat;
 import android.os.Parcelable;
 import android.os.Parcel;
 
-import java.io.Serializable;
-
 public class Exercise implements Parcelable {
 
     private int id;
@@ -14,6 +12,14 @@ public class Exercise implements Parcelable {
     private int reps;
     private int mData;
     //private String comment;
+
+    public Exercise (int id, String name, double weight, int sets, int reps) {
+        this.id = id;
+        this.name= name;
+        this.weight = weight;
+        this.sets = sets;
+        this.reps = reps;
+    }
 
     public Exercise (String name, double weight, int sets, int reps) {
         this.name= name;

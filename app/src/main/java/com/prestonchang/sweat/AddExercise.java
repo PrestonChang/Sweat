@@ -13,8 +13,6 @@ import android.widget.EditText;
 import android.content.Intent;
 import android.view.View;
 
-
-
 public class AddExercise extends ActionBarActivity  {
 
     private int mData;
@@ -23,23 +21,14 @@ public class AddExercise extends ActionBarActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_exercise);
-
-//        //Create spinner for selecting weight unit
-//        Spinner spinner = (Spinner) findViewById(R.id.weightUnitSpinner);
-//
-//        //Create an ArrayAdapter using the string array and a default spinner layout
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-//                R.array.unit_selector, android.R.layout.simple_spinner_item);
-//
-//        //Specify the layout to use when the list of choices appears
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//
-//        //Apply the adapter to the spinner
-//        spinner.setAdapter(adapter);
     }
 
+    //TODO check if exercise object is empty
+    //if empty display message
     public void onAddExercise(View v) {
         Exercise exercise = createExercise();
+        DatabaseHandler handler = new DatabaseHandler(this,null, null, 1);
+        handler.addExercise(exercise);
         Intent i = new Intent(this, Workout.class);
         i.putExtra("ExerciseObject", exercise);
         startActivity(i);

@@ -1,10 +1,13 @@
 package com.prestonchang.sweat;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -20,15 +23,13 @@ import android.content.Intent;
 
 
 public class Workout extends ActionBarActivity {
-    private ArrayList<String> exercises;
-    private ArrayAdapter<String> exercisesAdapter;
+    private ArrayList<Exercise> exercises;
+    private ArrayAdapter<Exercise> exercisesAdapter;
     private ListView exerciseItems;
     private String name;
 
     DatabaseHandler databaseHandler;
 
-    //Create class of exercises
-    //Have arrayList of exercises
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +39,16 @@ public class Workout extends ActionBarActivity {
         databaseHandler = new DatabaseHandler(this, null, null, 1);
 
         exerciseItems = (ListView) findViewById(R.id.exerciseItems);
-        readItems();
-        exercisesAdapter = new ExerciseRowAdapter(this, exercises);
 
-        exerciseItems.setAdapter(exercisesAdapter);
-        //Setup remove listener method call
+        updateList();
         setupListViewListener();
 
+        //TODO should probably change this
         Bundle exerciseData = getIntent().getExtras();
         if (exerciseData != null) {
             Exercise myExercise = exerciseData.getParcelable("ExerciseObject");
             addToWorkout(myExercise);
+
         }
 
     }
@@ -60,10 +60,12 @@ public class Workout extends ActionBarActivity {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                         //Remove the item within array at position
+                        Exercise exercise = exercises.get(position);
+                        databaseHandler.deleteExercise(exercise);
                         exercises.remove(position);
                         //Refresh the adapter
                         exercisesAdapter.notifyDataSetChanged();
-                        writeItems();
+                        updateList();
                         return true;
                     }
                 }
@@ -76,12 +78,8 @@ public class Workout extends ActionBarActivity {
     }
 
     public void addToWorkout(Exercise exercise) {
-        //String exerciseText = exercise.getWeight() + "lbs " + exercise.getSets() + " X " + exercise.getReps() + " " + exercise.getName();
-        String exerciseText = exercise.getName();
-
-        //exercisesAdapter.add(exerciseText);
-        exercisesAdapter.add(exercise.getName());
-        writeItems();
+        exercisesAdapter.add(exercise);
+        updateList();
     }
 
     @Override
@@ -106,25 +104,16 @@ public class Workout extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void readItems() {
-        File filesDir = getFilesDir();
-        File workoutFile = new File(filesDir, "workout.txt");
-        try {
-            exercises = new ArrayList<String>(FileUtils.readLines(workoutFile));
-        } catch (IOException e) {
-            exercises = new ArrayList<String>();
+
+    private void updateList() {
+        exercises = databaseHandler.getAllExercises();
+        if(exercisesAdapter == null) {
+            exercisesAdapter = new ExerciseRowAdapter(this, exercises);
+            exerciseItems.setAdapter(exercisesAdapter); //set it as the adapter of the list view instance
+        } else {
+            exercisesAdapter.clear();
+            exercisesAdapter.addAll(exercises);
+            exercisesAdapter.notifyDataSetChanged();
         }
     }
-
-    private void writeItems() {
-        File filesDir = getFilesDir();
-        File workoutFile = new File(filesDir, "workout.txt");
-        try {
-            FileUtils.writeLines(workoutFile, exercises);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }
